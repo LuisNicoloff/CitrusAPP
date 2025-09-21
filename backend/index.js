@@ -41,6 +41,29 @@ app.get("/api/productores", async (req, res) => {
   }
 });
 
+// Endpoint para CREAR un nuevo productor
+app.post("/api/productores", async (req, res) => {
+  try {
+    const { nombre, cuit, ubicacion } = req.body;
+    // Validación simple
+    if (!nombre) {
+      return res.status(400).json({ error: "El campo nombre es obligatorio." });
+    }
+    console.log("Recibida petición para crear productor:", req.body);
+
+    const nuevoProductor = await pool.query(
+      "INSERT INTO productores (nombre, cuit, ubicacion) VALUES($1, $2, $3) RETURNING *",
+      [nombre, cuit, ubicacion]
+    );
+
+    console.log("Productor creado:", nuevoProductor.rows[0]);
+    res.status(201).json(nuevoProductor.rows[0]); // 201 = Created
+  } catch (err) {
+    console.error("Error al crear productor:", err.message);
+    res.status(500).send("Error en el servidor al crear el productor.");
+  }
+});
+
 // --- Iniciar el Servidor ---
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
