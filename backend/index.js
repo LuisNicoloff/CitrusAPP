@@ -3,11 +3,15 @@ const express = require("express");
 const cors = require("cors");
 const { Pool } = require("pg");
 
+// Crear la aplicación Express
 const app = express();
-app.use(cors());
-app.use(express.json()); // Para poder leer JSON en el body
+
+// Middlewares
+app.use(cors()); // Permite peticiones desde cualquier origen (tu frontend en GitHub Pages)
+app.use(express.json()); // Permite al servidor entender JSON
 
 // Configuración de la conexión a la base de datos Neon
+// Lee la URL de conexión desde las variables de entorno
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
@@ -17,35 +21,28 @@ const pool = new Pool({
 
 // --- API ENDPOINTS ---
 
-// Obtener todos los productores
+// Endpoint de prueba para saber si el servidor está vivo
+app.get("/api", (req, res) => {
+  res.json({ message: "Hola! La API de CitrusAPP está funcionando." });
+});
+
+// Endpoint para obtener TODOS los productores
 app.get("/api/productores", async (req, res) => {
   try {
+    console.log("Recibida petición para obtener productores.");
     const { rows } = await pool.query(
       "SELECT * FROM productores ORDER BY nombre ASC"
     );
+    console.log("Enviando", rows.length, "productores.");
     res.json(rows);
   } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Error en el servidor");
+    console.error("Error al consultar la base de datos:", err.message);
+    res.status(500).send("Error en el servidor al obtener los productores.");
   }
 });
 
-// Crear un nuevo productor
-app.post("/api/productores", async (req, res) => {
-  try {
-    const { nombre, cuit, ubicacion } = req.body;
-    const newProductor = await pool.query(
-      "INSERT INTO productores (nombre, cuit, ubicacion) VALUES($1, $2, $3) RETURNING *",
-      [nombre, cuit, ubicacion]
-    );
-    res.json(newProductor.rows[0]);
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).send("Error en el servidor");
-  }
-});
-
+// --- Iniciar el Servidor ---
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en el puerto ${PORT}`);
+  console.log(`Servidor escuchando en el puerto ${PORT}`);
 });

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CitrusAPP</title>
 
-    <!-- HOJAS DE ESTILO (CSS) VAN EN EL HEAD -->
+    <!-- HOJAS DE ESTILO (CSS) -->
     <link
       href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900|Material+Icons"
       rel="stylesheet"
@@ -23,18 +23,15 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
-      /* Estilos personalizados y sobreescritura de Quasar/Flowbite */
       :root {
         --q-primary: #f97316;
       }
-      /* Para que la transición de color sea más suave */
       body {
         transition: background-color 0.3s, color 0.3s;
       }
     </style>
   </head>
   <body class="bg-gray-100 dark:bg-gray-900">
-    <!-- El div de la app es lo primero en el body -->
     <div id="q-app">
       <q-layout view="hHh Lpr lFf">
         <q-header elevated class="bg-primary text-white">
@@ -48,7 +45,6 @@
             ></q-btn>
             <q-toolbar-title>
               <q-avatar class="mr-2">
-                <!-- Asegúrate de tener un archivo logo_citrus.png en la misma carpeta -->
                 <img src="logo_citrus.png" alt="Logo CitrusAPP" />
               </q-avatar>
               CitrusAPP
@@ -67,24 +63,21 @@
         <q-drawer v-model="leftDrawerOpen" side="left" bordered>
           <q-list>
             <q-item-label header>Módulos</q-item-label>
-            <q-item clickable v-ripple @click="currentView = 'ingresoFruta'">
-              <q-item-section avatar>
-                <q-icon name="apple"></q-icon>
-              </q-item-section>
-              <q-item-section> Ingreso de Fruta </q-item-section>
-            </q-item>
-            <q-item clickable v-ripple @click="currentView = 'productores'">
-              <q-item-section avatar>
-                <q-icon name="people"></q-icon>
-              </q-item-section>
-              <q-item-section> Productores </q-item-section>
-            </q-item>
-            <q-item clickable v-ripple @click="currentView = 'usuarios'">
-              <q-item-section avatar>
-                <q-icon name="manage_accounts"></q-icon>
-              </q-item-section>
-              <q-item-section> Usuarios </q-item-section>
-            </q-item>
+            <q-item clickable v-ripple @click="currentView = 'ingresoFruta'"
+              ><q-item-section avatar
+                ><q-icon name="apple"></q-icon></q-item-section
+              ><q-item-section>Ingreso de Fruta</q-item-section></q-item
+            >
+            <q-item clickable v-ripple @click="currentView = 'productores'"
+              ><q-item-section avatar
+                ><q-icon name="people"></q-icon></q-item-section
+              ><q-item-section>Productores</q-item-section></q-item
+            >
+            <q-item clickable v-ripple @click="currentView = 'usuarios'"
+              ><q-item-section avatar
+                ><q-icon name="manage_accounts"></q-icon></q-item-section
+              ><q-item-section>Usuarios</q-item-section></q-item
+            >
           </q-list>
         </q-drawer>
 
@@ -104,12 +97,7 @@
               <q-table
                 title="Ingresos Recientes"
                 :rows="ingresosFruta"
-                :columns="[
-                            { name: 'ticket', label: 'N° Ticket', field: 'ticket', sortable: true },
-                            { name: 'productor', label: 'Productor', field: 'productor', align: 'left', sortable: true },
-                            { name: 'fechaIngreso', label: 'Fecha Ingreso', field: 'fechaIngreso', sortable: true },
-                            { name: 'pesoNeto', label: 'Peso Neto', field: 'pesoNeto' }
-                          ]"
+                :columns="[{ name: 'ticket', label: 'N° Ticket', field: 'ticket' }, { name: 'productor', label: 'Productor', field: 'productor' }, { name: 'fechaIngreso', label: 'Fecha Ingreso', field: 'fechaIngreso' }, { name: 'pesoNeto', label: 'Peso Neto', field: 'pesoNeto' }]"
                 row-key="id"
                 :dark="darkMode"
                 class="shadow-md"
@@ -130,11 +118,7 @@
               <q-table
                 title="Productores"
                 :rows="productores"
-                :columns="[
-                            { name: 'nombre', label: 'Nombre', field: 'nombre', align: 'left', sortable: true },
-                            { name: 'cuit', label: 'CUIT', field: 'cuit', sortable: true },
-                            { name: 'ubicacion', label: 'Ubicación', field: 'ubicacion' }
-                          ]"
+                :columns="[{ name: 'nombre', label: 'Nombre', field: 'nombre', align: 'left' }, { name: 'cuit', label: 'CUIT', field: 'cuit' }, { name: 'ubicacion', label: 'Ubicación', field: 'ubicacion' }]"
                 row-key="id"
                 :dark="darkMode"
                 class="shadow-md"
@@ -155,12 +139,7 @@
               <q-table
                 title="Usuarios del Sistema"
                 :rows="usuarios"
-                :columns="[
-                            { name: 'nombre', label: 'Apellido y Nombre', field: 'nombre', align: 'left', sortable: true },
-                            { name: 'usuario', label: 'Usuario', field: 'usuario', sortable: true },
-                            { name: 'email', label: 'Email', field: 'email', align: 'left' },
-                            { name: 'rol', label: 'Rol', field: 'rol' }
-                          ]"
+                :columns="[{ name: 'nombre', label: 'Apellido y Nombre', field: 'nombre' }, { name: 'usuario', label: 'Usuario', field: 'usuario' }, { name: 'email', label: 'Email', field: 'email' }, { name: 'rol', label: 'Rol', field: 'rol' }]"
                 row-key="id"
                 :dark="darkMode"
                 class="shadow-md"
@@ -171,95 +150,59 @@
       </q-layout>
     </div>
 
-    <!-- SCRIPTS DE JAVASCRIPT AL FINAL DEL BODY -->
-
-    <!-- 1. Cargar Vue -->
+    <!-- SCRIPTS -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-
-    <!-- 2. Cargar Quasar -->
     <script src="https://cdn.jsdelivr.net/npm/quasar@2.12.0/dist/quasar.umd.prod.js"></script>
-
-    <!-- 3. Cargar Flowbite (Opcional, para componentes adicionales) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
 
-    <!-- 4. TU CÓDIGO de la aplicación, al final de todo -->
     <script>
-      const { createApp, ref, reactive } = Vue;
+      const { createApp, ref, onMounted } = Vue;
 
       const app = createApp({
         setup() {
+          // --- URL DE TU API DESPLEGADA EN RENDER ---
+          // !!! ASEGÚRATE DE QUE ESTA ES LA URL CORRECTA QUE TE DIO RENDER !!!
+          const API_URL = "https://citrusapp-backend.onrender.com";
+
           // --- Estado General de la App ---
           const leftDrawerOpen = ref(false);
           const darkMode = ref(false);
-          const currentView = ref("ingresoFruta"); // Vista que se muestra al inicio
+          const currentView = ref("productores"); // Iniciamos en productores para ver el resultado
 
-          // --- Datos Falsos (Mock Data) ---
-          const productores = reactive([
-            {
-              id: 1,
-              nombre: "Finca El Naranjal S.A.",
-              cuit: "30-12345678-9",
-              ubicacion: "Tucumán",
-            },
-            {
-              id: 2,
-              nombre: "Citrus del Norte S.R.L.",
-              cuit: "30-87654321-1",
-              ubicacion: "Salta",
-            },
-            {
-              id: 3,
-              nombre: "Limoneros de Jujuy",
-              cuit: "30-11223344-5",
-              ubicacion: "Jujuy",
-            },
-          ]);
+          // --- Estado de los Datos (INICIAN VACÍOS) ---
+          const productores = ref([]);
+          const usuarios = ref([]);
+          const ingresosFruta = ref([]);
 
-          const usuarios = reactive([
-            {
-              id: 1,
-              nombre: "Juan Perez",
-              email: "juan@email.com",
-              usuario: "jperez",
-              rol: "Admin",
-            },
-            {
-              id: 2,
-              nombre: "Ana Gomez",
-              email: "ana@email.com",
-              usuario: "agomez",
-              rol: "Operador",
-            },
-          ]);
+          // --- Función para Cargar Datos de la API ---
+          const cargarProductores = async () => {
+            try {
+              const response = await fetch(`${API_URL}/api/productores`);
+              if (!response.ok) {
+                throw new Error("La respuesta de la red no fue OK");
+              }
+              const data = await response.json();
+              productores.value = data; // Rellenamos el array con los datos reales
+            } catch (error) {
+              console.error("Falló la carga de productores:", error);
+            }
+          };
 
-          const ingresosFruta = reactive([
-            {
-              id: 1,
-              ticket: "T-001",
-              productor: "Finca El Naranjal S.A.",
-              fechaIngreso: "2025-09-21 10:00",
-              pesoNeto: "22,500 kg",
-            },
-            {
-              id: 2,
-              ticket: "T-002",
-              productor: "Citrus del Norte S.R.L.",
-              fechaIngreso: "2025-09-21 11:30",
-              pesoNeto: "24,100 kg",
-            },
-          ]);
+          // --- Hook de Ciclo de Vida ---
+          onMounted(() => {
+            cargarProductores();
+            // Aquí en el futuro llamaremos a cargarUsuarios(), cargarIngresos(), etc.
+          });
 
-          // --- Funciones ---
+          // --- Funciones de la UI ---
           const toggleLeftDrawer = () => {
             leftDrawerOpen.value = !leftDrawerOpen.value;
           };
-
           const toggleDarkMode = (value) => {
-            // El 'value' lo recibe directamente del componente q-toggle
             Quasar.Dark.set(value);
           };
 
-          // Retornamos todo lo que el template HTML necesita usar
+          // Retornamos todo lo que el template HTML necesita
           return {
             leftDrawerOpen,
             darkMode,
@@ -273,10 +216,7 @@
         },
       });
 
-      // Le decimos a Vue que use el plugin de Quasar
       app.use(Quasar);
-
-      // Montamos la aplicación de Vue en el div #q-app
       app.mount("#q-app");
     </script>
   </body>
