@@ -20,9 +20,6 @@
       .sidebar-transition {
         transition: all 0.3s ease-in-out;
       }
-      .content-transition {
-        transition: margin-left 0.3s ease-in-out;
-      }
     </style>
     <script>
       tailwind.config = {
@@ -52,57 +49,95 @@
     class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-200 antialiased"
   >
     <div id="app" v-cloak>
+      <!-- ===== Spinner de Carga Global ===== -->
+      <div
+        v-if="isLoading"
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      >
+        <svg
+          class="animate-spin h-10 w-10 text-white"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+      </div>
+
       <!-- ===== VISTA DE LOGIN ===== -->
       <div
         v-if="!isAuthenticated"
-        class="flex items-center justify-center h-screen w-screen bg-gray-200 dark:bg-gray-900"
+        class="flex items-center justify-center h-screen w-screen bg-gray-200 dark:bg-gray-900 p-4"
       >
         <div
-          class="w-full max-w-sm p-6 bg-white rounded-lg shadow-md dark:bg-gray-800"
+          class="w-full max-w-4xl flex rounded-lg shadow-lg overflow-hidden bg-white dark:bg-gray-800"
         >
-          <div class="flex justify-center mb-4">
-            <img src="logo_citrus.png" alt="Logo" class="h-12 w-12" />
+          <!-- Panel de la Imagen -->
+          <div class="hidden md:block w-1/2">
+            <img
+              src="fondo.jpg"
+              alt="Fondo Cítricos"
+              class="w-full h-full object-cover"
+            />
           </div>
-          <h2 class="text-2xl font-bold text-center text-primary-600">
-            CitrusAPP
-          </h2>
-          <form @submit.prevent="handleLogin" class="mt-6">
-            <div>
-              <label for="username" class="block text-sm font-medium"
-                >Usuario</label
-              >
-              <input
-                v-model="loginForm.usuario"
-                id="username"
-                type="text"
-                required
-                class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-              />
+          <!-- Panel del Formulario -->
+          <div class="w-full md:w-1/2 p-8 flex flex-col justify-center">
+            <div class="flex justify-center mb-4">
+              <img src="logo_citrus.png" alt="Logo" class="h-12 w-12" />
             </div>
-            <div class="mt-4">
-              <label for="password" class="block text-sm font-medium"
-                >Contraseña</label
-              >
-              <input
-                v-model="loginForm.password"
-                id="password"
-                type="password"
-                required
-                class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-              />
-            </div>
-            <p v-if="loginError" class="mt-2 text-sm text-red-600">
-              {{ loginError }}
-            </p>
-            <div class="mt-6">
-              <button
-                type="submit"
-                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-              >
-                Iniciar Sesión
-              </button>
-            </div>
-          </form>
+            <h2 class="text-2xl font-bold text-center text-primary-600">
+              CitrusAPP
+            </h2>
+            <form @submit.prevent="handleLogin" class="mt-6">
+              <div>
+                <label for="username" class="block text-sm font-medium"
+                  >Usuario</label
+                >
+                <input
+                  v-model="loginForm.usuario"
+                  id="username"
+                  type="text"
+                  required
+                  class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                />
+              </div>
+              <div class="mt-4">
+                <label for="password" class="block text-sm font-medium"
+                  >Contraseña</label
+                >
+                <input
+                  v-model="loginForm.password"
+                  id="password"
+                  type="password"
+                  required
+                  class="mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                />
+              </div>
+              <p v-if="loginError" class="mt-2 text-sm text-red-600">
+                {{ loginError }}
+              </p>
+              <div class="mt-6">
+                <button
+                  type="submit"
+                  class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                >
+                  Iniciar Sesión
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
 
@@ -115,7 +150,7 @@
         ></div>
 
         <aside
-          :class="['fixed md:relative inset-y-0 left-0 bg-white dark:bg-gray-800 border-r dark:border-gray-700 flex flex-col z-30 sidebar-transition', isSidebarCollapsed ? 'w-20' : 'w-64', isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0']"
+          :class="['fixed md:static inset-y-0 left-0 bg-white dark:bg-gray-800 border-r dark:border-gray-700 flex flex-col z-30 sidebar-transition', isSidebarCollapsed ? 'w-20' : 'w-64', isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0']"
         >
           <div
             class="h-16 flex items-center justify-center border-b dark:border-gray-700 flex-shrink-0"
@@ -140,11 +175,17 @@
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                stroke-width="2"
               >
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                  d="M17.53 7.47a6.5 6.5 0 0 0 -9.19 -9.19a6.5 6.5 0 0 0 9.19 9.19"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M18.84 18.84a6.5 6.5 0 0 0 -9.19 -9.19"
                 />
               </svg>
               <span v-if="!isSidebarCollapsed" class="ml-3"
@@ -216,10 +257,7 @@
           </div>
         </aside>
 
-        <div
-          class="flex-1 flex flex-col content-transition"
-          :class="isSidebarCollapsed ? 'md:ml-20' : 'md:ml-64'"
-        >
+        <div class="flex-1 flex flex-col min-w-0">
           <header
             class="h-16 bg-white dark:bg-gray-800 border-b dark:border-gray-700 flex items-center justify-between px-4 flex-shrink-0"
           >
@@ -302,14 +340,16 @@
           </header>
 
           <main class="flex-1 p-4 sm:p-6 md:p-8 overflow-y-auto">
-            <!-- VISTA INGRESO FRUTA -->
+            <!-- VISTAS -->
             <div v-if="currentView === 'ingresoFruta'">
-              <div class="flex justify-between items-center mb-6">
+              <div
+                class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4"
+              >
                 <h1 class="text-3xl font-bold">Ingresos de Fruta</h1>
                 <button
                   @click="abrirModal('ingreso')"
                   type="button"
-                  class="text-white bg-primary-600 hover:bg-primary-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                  class="text-white bg-primary-600 hover:bg-primary-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center w-full sm:w-auto"
                 >
                   Nuevo Ingreso
                 </button>
@@ -347,7 +387,7 @@
                       <td class="px-6 py-4">{{ i.peso_neto }}</td>
                       <td class="px-6 py-4">{{ i.bins_total }}</td>
                     </tr>
-                    <tr v-if="ingresos.length === 0">
+                    <tr v-if="!isLoading && ingresos.length === 0">
                       <td colspan="5" class="px-6 py-4 text-center">
                         No hay ingresos para mostrar.
                       </td>
@@ -357,14 +397,15 @@
               </div>
             </div>
 
-            <!-- VISTAS PRODUCTORES Y USUARIOS -->
             <div v-if="currentView === 'productores'">
-              <div class="flex justify-between items-center mb-6">
+              <div
+                class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4"
+              >
                 <h1 class="text-3xl font-bold">Gestión de Productores</h1>
                 <button
                   @click="abrirModal('productor')"
                   type="button"
-                  class="text-white bg-primary-600 hover:bg-primary-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                  class="text-white bg-primary-600 hover:bg-primary-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center w-full sm:w-auto"
                 >
                   Nuevo Productor
                 </button>
@@ -396,7 +437,7 @@
                       <td class="px-6 py-4">{{ p.cuit }}</td>
                       <td class="px-6 py-4">{{ p.ubicacion }}</td>
                     </tr>
-                    <tr v-if="productores.length === 0">
+                    <tr v-if="!isLoading && productores.length === 0">
                       <td colspan="3" class="px-6 py-4 text-center">
                         No hay productores para mostrar.
                       </td>
@@ -406,12 +447,14 @@
               </div>
             </div>
             <div v-if="currentView === 'usuarios'">
-              <div class="flex justify-between items-center mb-6">
+              <div
+                class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4"
+              >
                 <h1 class="text-3xl font-bold">Gestión de Usuarios</h1>
                 <button
                   @click="abrirModal('usuario')"
                   type="button"
-                  class="text-white bg-primary-600 hover:bg-primary-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+                  class="text-white bg-primary-600 hover:bg-primary-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center w-full sm:w-auto"
                 >
                   Nuevo Usuario
                 </button>
@@ -445,7 +488,7 @@
                       <td class="px-6 py-4">{{ u.email }}</td>
                       <td class="px-6 py-4">{{ u.rol }}</td>
                     </tr>
-                    <tr v-if="usuarios.length === 0">
+                    <tr v-if="!isLoading && usuarios.length === 0">
                       <td colspan="4" class="px-6 py-4 text-center">
                         No hay usuarios para mostrar.
                       </td>
@@ -461,7 +504,7 @@
       <!-- MODALES -->
       <div
         v-if="showModal.productor"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
+        class="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50 p-4"
       >
         <div
           class="relative bg-white rounded-lg shadow dark:bg-gray-700 w-full max-w-md"
@@ -483,18 +526,15 @@
               placeholder="Nombre"
               required
               class="w-full p-2.5 bg-gray-50 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-            />
-            <input
+            /><input
               v-model="nuevoProductor.cuit"
               placeholder="CUIT"
               class="w-full p-2.5 bg-gray-50 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-            />
-            <input
+            /><input
               v-model="nuevoProductor.ubicacion"
               placeholder="Ubicación"
               class="w-full p-2.5 bg-gray-50 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-            />
-            <button
+            /><button
               type="submit"
               class="text-white bg-primary-600 hover:bg-primary-700 font-medium rounded-lg text-sm px-5 py-2.5"
             >
@@ -505,7 +545,7 @@
       </div>
       <div
         v-if="showModal.usuario"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
+        class="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50 p-4"
       >
         <div
           class="relative bg-white rounded-lg shadow dark:bg-gray-700 w-full max-w-md"
@@ -527,37 +567,32 @@
               placeholder="Apellido y Nombre"
               required
               class="w-full p-2.5 bg-gray-50 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-            />
-            <input
+            /><input
               v-model="nuevoUsuario.email"
               type="email"
               placeholder="Email"
               required
               class="w-full p-2.5 bg-gray-50 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-            />
-            <input
+            /><input
               v-model="nuevoUsuario.usuario"
               placeholder="Usuario"
               required
               class="w-full p-2.5 bg-gray-50 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-            />
-            <input
+            /><input
               v-model="nuevoUsuario.password"
               type="password"
               placeholder="Contraseña"
               required
               class="w-full p-2.5 bg-gray-50 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-            />
-            <select
+            /><select
               v-model="nuevoUsuario.rol"
               required
               class="w-full p-2.5 bg-gray-50 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
             >
               <option disabled value="">Seleccione un rol</option>
               <option>Admin</option>
-              <option>Operador</option>
-            </select>
-            <button
+              <option>Operador</option></select
+            ><button
               type="submit"
               class="text-white bg-primary-600 hover:bg-primary-700 font-medium rounded-lg text-sm px-5 py-2.5"
             >
@@ -568,7 +603,7 @@
       </div>
       <div
         v-if="showModal.ingreso"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
+        class="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50 p-4"
       >
         <div
           class="relative bg-white rounded-lg shadow dark:bg-gray-700 w-full max-w-4xl max-h-[90vh] flex flex-col"
@@ -585,15 +620,15 @@
             </button>
           </div>
           <form @submit.prevent="guardarIngreso" class="p-4 overflow-y-auto">
-            <!-- Formulario Principal -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div
+              class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6"
+            >
               <input
                 v-model="nuevoIngreso.n_ticket"
                 placeholder="N° de Ticket"
                 required
                 class="p-2.5 bg-gray-50 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-              />
-              <select
+              /><select
                 v-model="nuevoIngreso.productor_id"
                 required
                 class="p-2.5 bg-gray-50 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
@@ -601,61 +636,51 @@
                 <option disabled value="">Seleccione Productor</option>
                 <option v-for="p in productores" :key="p.id" :value="p.id">
                   {{ p.nombre }}
-                </option>
-              </select>
-              <input
+                </option></select
+              ><input
                 v-model="nuevoIngreso.fecha_ingreso"
                 type="datetime-local"
                 required
                 class="p-2.5 bg-gray-50 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-              />
-              <input
+              /><input
                 v-model="nuevoIngreso.fecha_cosecha"
                 type="date"
                 class="p-2.5 bg-gray-50 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-              />
-              <input
+              /><input
                 v-model="nuevoIngreso.transporte"
                 placeholder="Transporte"
                 class="p-2.5 bg-gray-50 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-              />
-              <input
+              /><input
                 v-model="nuevoIngreso.chofer"
                 placeholder="Chofer"
                 class="p-2.5 bg-gray-50 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-              />
-              <input
+              /><input
                 v-model="nuevoIngreso.chasis"
                 placeholder="Chasis"
                 class="p-2.5 bg-gray-50 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-              />
-              <input
+              /><input
                 v-model="nuevoIngreso.acoplado"
                 placeholder="Acoplado"
                 class="p-2.5 bg-gray-50 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-              />
-              <input
+              /><input
                 v-model.number="nuevoIngreso.peso_bruto"
                 type="number"
                 step="0.01"
                 placeholder="Peso Bruto (kg)"
                 class="p-2.5 bg-gray-50 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-              />
-              <input
+              /><input
                 v-model.number="nuevoIngreso.tara"
                 type="number"
                 step="0.01"
                 placeholder="Tara (kg)"
                 class="p-2.5 bg-gray-50 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-              />
-              <input
+              /><input
                 :value="pesoNetoCalculado"
                 type="number"
                 placeholder="Peso Neto (kg)"
                 readonly
                 class="p-2.5 bg-gray-200 dark:bg-gray-700 border rounded-lg"
-              />
-              <input
+              /><input
                 :value="binsTotalCalculado"
                 type="number"
                 placeholder="Total Bins"
@@ -663,38 +688,33 @@
                 class="p-2.5 bg-gray-200 dark:bg-gray-700 border rounded-lg"
               />
             </div>
-            <!-- Detalle de Ingreso -->
             <div class="border-t pt-4 mt-4">
               <h4 class="text-md font-semibold mb-2">Detalle de Remitos</h4>
               <div
                 v-for="(detalle, index) in nuevoIngreso.detalles"
                 :key="index"
-                class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-2 p-2 border rounded-lg"
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 mb-2 p-2 border rounded-lg items-center"
               >
                 <input
                   v-model="detalle.n_remito"
                   placeholder="N° Remito"
                   class="p-2.5 bg-gray-50 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-                />
-                <input
+                /><input
                   v-model="detalle.finca"
                   placeholder="Finca"
                   class="p-2.5 bg-gray-50 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-                />
-                <input
+                /><input
                   v-model="detalle.producto"
                   placeholder="Producto (ej: Limón)"
                   class="p-2.5 bg-gray-50 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-                />
-                <input
+                /><input
                   v-model.number="detalle.cantidad_bins"
                   type="number"
                   placeholder="Cant. Bins"
                   class="p-2.5 bg-gray-50 border rounded-lg dark:bg-gray-600 dark:border-gray-500"
-                />
-                <button
+                /><button
                   @click.prevent="quitarDetalle(index)"
-                  class="col-span-2 md:col-span-4 text-red-500 hover:text-red-700 text-sm"
+                  class="col-span-full sm:col-span-2 lg:col-span-4 text-red-500 hover:text-red-700 text-sm text-right"
                 >
                   Quitar Detalle
                 </button>
@@ -706,7 +726,6 @@
                 + Agregar Detalle
               </button>
             </div>
-
             <div class="border-t pt-4 mt-4 flex justify-end">
               <button
                 type="submit"
@@ -728,13 +747,12 @@
         setup() {
           const API_URL = "https://citrusapp-backend.onrender.com";
 
-          // --- AUTH ---
           const isAuthenticated = ref(false);
           const currentUser = ref(null);
           const loginForm = reactive({ usuario: "", password: "" });
           const loginError = ref("");
 
-          // --- UI ---
+          const isLoading = ref(false);
           const currentView = ref("ingresoFruta");
           const darkMode = ref(false);
           const isSidebarCollapsed = ref(false);
@@ -745,7 +763,6 @@
             ingreso: false,
           });
 
-          // --- DATA ---
           const productores = ref([]);
           const usuarios = ref([]);
           const ingresos = ref([]);
@@ -753,7 +770,6 @@
           const nuevoUsuario = ref({ rol: "" });
           const nuevoIngreso = ref({ detalles: [] });
 
-          // --- COMPUTED (Cálculos automáticos) ---
           const pesoNetoCalculado = computed(() => {
             const pesoBruto = parseFloat(nuevoIngreso.value.peso_bruto) || 0;
             const tara = parseFloat(nuevoIngreso.value.tara) || 0;
@@ -766,18 +782,21 @@
             );
           });
 
-          // --- API HELPERS ---
           const fetchData = async (endpoint, dataRef) => {
+            isLoading.value = true;
             try {
               const response = await fetch(`${API_URL}/api/${endpoint}`);
               if (!response.ok) throw new Error(`Error al cargar ${endpoint}`);
               dataRef.value = await response.json();
             } catch (error) {
               console.error(`Fallo en fetchData para ${endpoint}:`, error);
+            } finally {
+              isLoading.value = false;
             }
           };
 
           const postData = async (endpoint, body, callback) => {
+            isLoading.value = true;
             try {
               const response = await fetch(`${API_URL}/api/${endpoint}`, {
                 method: "POST",
@@ -792,12 +811,14 @@
               callback();
             } catch (error) {
               console.error(`Fallo en postData para ${endpoint}:`, error);
+            } finally {
+              isLoading.value = false;
             }
           };
 
-          // --- AUTH LOGIC ---
           const handleLogin = async () => {
             loginError.value = "";
+            isLoading.value = true;
             try {
               const response = await fetch(`${API_URL}/api/login`, {
                 method: "POST",
@@ -814,6 +835,8 @@
               await loadInitialData();
             } catch (error) {
               loginError.value = error.message;
+            } finally {
+              isLoading.value = false;
             }
           };
 
@@ -823,16 +846,16 @@
             sessionStorage.removeItem("currentUser");
           };
 
-          // --- CORE LOGIC ---
           const loadInitialData = async () => {
+            isLoading.value = true;
             await Promise.all([
               fetchData("productores", productores),
               fetchData("usuarios", usuarios),
               fetchData("ingresos", ingresos),
             ]);
+            isLoading.value = false;
           };
 
-          // --- MODAL & FORM LOGIC ---
           const abrirModal = (tipo) => {
             if (tipo === "productor") nuevoProductor.value = {};
             if (tipo === "usuario") nuevoUsuario.value = { rol: "" };
@@ -879,7 +902,6 @@
             nuevoIngreso.value.detalles.splice(index, 1);
           };
 
-          // --- THEME LOGIC ---
           const updateTheme = () => {
             if (darkMode.value) document.documentElement.classList.add("dark");
             else document.documentElement.classList.remove("dark");
@@ -890,7 +912,6 @@
             updateTheme();
           };
 
-          // --- LIFECYCLE HOOK ---
           onMounted(() => {
             if (
               localStorage.getItem("theme") === "dark" ||
@@ -916,6 +937,7 @@
             loginError,
             handleLogin,
             handleLogout,
+            isLoading,
             currentView,
             darkMode,
             toggleDarkMode,
